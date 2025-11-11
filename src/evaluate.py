@@ -11,7 +11,7 @@ from .model import get_model
 def evaluate(args):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     _, val_tfms = default_transforms(args.image_size)
-    class_names = ['AI', 'Human', 'Protected'] if args.num_classes == 3 else None
+    class_names = ['AI', 'Human'] if args.num_classes == 2 else None
     ds = ArtDataset(args.data_dir, split='val', transform=val_tfms, class_names=class_names)
     loader = DataLoader(ds, batch_size=args.batch_size, shuffle=False, num_workers=4, pin_memory=True)
 
@@ -46,6 +46,6 @@ if __name__ == '__main__':
     p.add_argument('--checkpoint', type=str, default='models/detector.pth')
     p.add_argument('--batch_size', type=int, default=32)
     p.add_argument('--image_size', type=int, default=224)
-    p.add_argument('--num_classes', type=int, default=3)
+    p.add_argument('--num_classes', type=int, default=2)
     args = p.parse_args()
     evaluate(args)

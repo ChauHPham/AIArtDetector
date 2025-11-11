@@ -1,6 +1,6 @@
-# AI Art & Protection Detector (PyTorch + Web App)
+# AI Art Detector (PyTorch + Web App)
 
-Detect whether an image is **AI-generated**, **Human-made**, or **Protected** (e.g., Glaze/Nightshade-like perturbations) using a transfer-learning baseline.
+Detect whether an image is **AI-generated** or **Human-made** using a transfer-learning baseline.
 
 ## Features
 - PyTorch + torchvision baseline (ResNet-50)
@@ -18,12 +18,10 @@ ai_art_detector/
 ├─ data/
 │  ├─ train/
 │  │  ├─ AI/            # put AI-generated images here
-│  │  ├─ Human/         # put human-made images here
-│  │  └─ Protected/     # put Glaze/Nightshade protected images here
+│  │  └─ Human/         # put human-made images here
 │  └─ val/
 │     ├─ AI/
-│     ├─ Human/
-│     └─ Protected/
+│     └─ Human/
 ├─ src/
 │  ├─ datasets.py
 │  ├─ model.py
@@ -61,12 +59,12 @@ ai_art_detector/
 
 3. **Train**
    ```bash
-   python -m src.train --data_dir data --epochs 10 --batch_size 32 --lr 1e-4 --num_classes 3
+   python -m src.train --data_dir data --epochs 10 --batch_size 32 --lr 1e-4 --num_classes 2
    ```
 
 4. **Evaluate**
    ```bash
-   python -m src.evaluate --data_dir data --checkpoint models/detector.pth --num_classes 3
+   python -m src.evaluate --data_dir data --checkpoint models/detector.pth --num_classes 2
    ```
 
 ## 🌐 Web Application
@@ -86,7 +84,7 @@ ai_art_detector/
 
 ### Web App Features
 - **Drag & Drop Interface**: Upload images by dragging them onto the upload area
-- **Real-time Predictions**: Get instant AI/Human/Protected classification
+- **Real-time Predictions**: Get instant AI/Human classification
 - **Confidence Scores**: See probability distributions for all classes
 - **Responsive Design**: Works on desktop, tablet, and mobile devices
 - **Image Preview**: See your uploaded image before analysis
@@ -106,10 +104,41 @@ docker build -t ai-art-detector .
 docker run -p 5000:5000 ai-art-detector
 ```
 
+## 📥 Download Dataset
+
+You can download the dataset using either method:
+
+### Option 1: Using KaggleHub (Recommended)
+```python
+import kagglehub
+
+# Download latest version
+path = kagglehub.dataset_download("alessandrasala79/ai-vs-human-generated-dataset")
+print("Path to dataset files:", path)
+```
+
+**Pros:**
+- Clean, programmatic download
+- Easy to update to latest version
+- Handles authentication automatically
+
+**Requirements:**
+- Install: `pip install kagglehub`
+- Set up Kaggle API credentials (kaggle.json in ~/.kaggle/)
+
+### Option 2: Manual Download
+1. Go to: https://www.kaggle.com/datasets/alessandrasala79/ai-vs-human-generated-dataset
+2. Click "Download" button
+3. Extract the zip file
+4. Organize images into `data/train/AI/`, `data/train/Human/`, `data/val/AI/`, `data/val/Human/`
+
+**Pros:**
+- No API setup needed
+- Can preview dataset before downloading
+
 ## Notes
 - This is a baseline; for real-world robustness, consider:
   - multiple generators in the AI class
   - augmentations (jpeg, resize, blur) to avoid overfitting to trivial cues
-  - a protection detector head that uses high-frequency residuals
 - GPU recommended but not required.
 - Web app works with or without a trained model (will use untrained weights if no checkpoint found)

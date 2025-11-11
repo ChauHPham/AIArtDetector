@@ -11,7 +11,7 @@ from .model import get_model
 
 def train(args):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    class_names = ['AI', 'Human', 'Protected'] if args.num_classes == 3 else None
+    class_names = ['AI', 'Human'] if args.num_classes == 2 else None
     train_tfms, val_tfms = default_transforms(args.image_size)
 
     train_ds = ArtDataset(args.data_dir, split='train', transform=train_tfms, class_names=class_names)
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     p.add_argument('--batch_size', type=int, default=32)
     p.add_argument('--lr', type=float, default=1e-4)
     p.add_argument('--image_size', type=int, default=224)
-    p.add_argument('--num_classes', type=int, default=3)
+    p.add_argument('--num_classes', type=int, default=2)
     p.add_argument('--no_pretrain', action='store_true')
     args = p.parse_args()
     train(args)

@@ -57,7 +57,7 @@ Go to `http://localhost:5000` and start detecting AI art!
 Serves the main web interface.
 
 ### `POST /predict`
-Upload an image and get AI/Human/Protected classification.
+Upload an image and get AI/Human classification.
 
 **Request:**
 - Method: POST
@@ -71,8 +71,7 @@ Upload an image and get AI/Human/Protected classification.
   "confidence": 0.95,
   "probabilities": {
     "AI": 0.95,
-    "Human": 0.03,
-    "Protected": 0.02
+    "Human": 0.05
   }
 }
 ```

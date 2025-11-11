@@ -18,7 +18,7 @@ class ArtDetector:
             device (str): Device to run inference on ('cuda' or 'cpu')
         """
         self.device = device or torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.class_names = ['AI', 'Human', 'Protected']
+        self.class_names = ['AI', 'Human']
         self.model = None
         self.transform = None
         
@@ -29,7 +29,7 @@ class ArtDetector:
         """Load the trained model"""
         from .model import get_model
         
-        self.model = get_model(num_classes=3, pretrained=False).to(self.device)
+        self.model = get_model(num_classes=2, pretrained=False).to(self.device)
         
         if os.path.exists(checkpoint_path):
             self.model.load_state_dict(torch.load(checkpoint_path, map_location=self.device))

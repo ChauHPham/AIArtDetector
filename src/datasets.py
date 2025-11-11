@@ -3,6 +3,13 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
 
+# Common image file extensions
+IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.webp'}
+
+def is_image_file(filename):
+    """Check if a file is an image based on its extension"""
+    return any(filename.lower().endswith(ext) for ext in IMAGE_EXTENSIONS)
+
 class ArtDataset(Dataset):
     def __init__(self, root_dir, split='train', transform=None, class_names=None):
         self.root_dir = os.path.join(root_dir, split)
@@ -18,7 +25,8 @@ class ArtDataset(Dataset):
                 continue
             for name in os.listdir(folder):
                 path = os.path.join(folder, name)
-                if os.path.isfile(path):
+                # Only include actual image files, skip .gitkeep and other non-image files
+                if os.path.isfile(path) and is_image_file(name):
                     self.samples.append((path, self.class_to_idx[cls]))
 
     def __len__(self):
@@ -26,10 +34,16 @@ class ArtDataset(Dataset):
 
     def __getitem__(self, idx):
         path, label = self.samples[idx]
-        img = Image.open(path).convert('RGB')
-        if self.transform:
-            img = self.transform(img)
-        return img, label
+        try:
+            img = Image.open(path).convert('RGB')
+            if self.transform:
+                img = self.transform(img)
+            return img, label
+        except Exception as e:
+            # If image is corrupted, try to return a black image or skip
+            # For now, we'll raise the error but you could also return a default image
+            print(f"Warning: Could not load image {path}: {e}")
+            raise
 
 def default_transforms(image_size=224):
     train_tfms = transforms.Compose([
