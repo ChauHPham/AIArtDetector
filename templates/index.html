@@ -198,12 +198,22 @@
         }
 
         .preview-image {
-            max-width: 200px;
-            max-height: 200px;
+            max-width: 300px;
+            max-height: 300px;
             border-radius: 10px;
             margin: 20px auto;
             display: block;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .preview-container {
+            margin: 20px 0;
+            display: none;
+        }
+
+        .preview-container.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
         }
 
         .error {
@@ -215,8 +225,72 @@
             border-left: 5px solid #d63031;
         }
 
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 3.7s;
+            min-width: 250px;
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-icon {
+            font-size: 1.5em;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
         .ai-result { color: #e17055; }
         .human-result { color: #00b894; }
+
+        .disclaimer {
+            margin-top: 40px;
+            padding: 15px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .disclaimer strong {
+            color: #856404;
+        }
     </style>
 </head>
 <body>
@@ -231,8 +305,19 @@
             <input type="file" id="fileInput" accept="image/*">
         </div>
         
+        <div class="preview-container" id="previewContainer">
+            <img id="previewImage" class="preview-image">
+        </div>
+        
         <button class="btn" id="analyzeBtn" disabled>Analyze Image</button>
         <button class="btn" id="clearBtn" style="display: none;">Clear</button>
+        
+        <div class="notification" id="notification">
+            <div class="notification-content">
+                <span class="notification-icon">✓</span>
+                <span>Successfully uploaded!</span>
+            </div>
+        </div>
         
         <div class="loading" id="loading">
             <div class="spinner"></div>
@@ -240,13 +325,16 @@
         </div>
         
         <div class="result" id="result">
-            <img id="previewImage" class="preview-image" style="display: none;">
             <div id="prediction" class="prediction"></div>
             <div id="confidence" class="confidence"></div>
             <div class="probabilities" id="probabilities"></div>
         </div>
         
         <div id="error" class="error" style="display: none;"></div>
+        
+        <div class="disclaimer">
+            <p><strong>Disclaimer:</strong> Predictions may not be accurate due to model limitations, potential overfitting, and limited training data. This tool is for educational purposes only and should not be used as the sole basis for determining whether content is AI-generated or human-made.</p>
+        </div>
     </div>
 
     <script>
@@ -258,6 +346,8 @@
         const result = document.getElementById('result');
         const error = document.getElementById('error');
         const previewImage = document.getElementById('previewImage');
+        const previewContainer = document.getElementById('previewContainer');
+        const notification = document.getElementById('notification');
         const prediction = document.getElementById('prediction');
         const confidence = document.getElementById('confidence');
         const probabilities = document.getElementById('probabilities');
@@ -306,16 +396,26 @@
             analyzeBtn.disabled = false;
             clearBtn.style.display = 'inline-block';
             
-            // Show preview
+            // Show preview immediately
             const reader = new FileReader();
             reader.onload = (e) => {
                 previewImage.src = e.target.result;
-                previewImage.style.display = 'block';
+                previewContainer.classList.add('show');
+                // Show success notification
+                showNotification();
             };
             reader.readAsDataURL(file);
             
             hideError();
             hideResult();
+        }
+
+        function showNotification() {
+            notification.classList.add('show');
+            // Auto-hide after 4 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
         }
 
         // Analyze button
@@ -406,7 +506,7 @@
             fileInput.value = '';
             analyzeBtn.disabled = true;
             clearBtn.style.display = 'none';
-            previewImage.style.display = 'none';
+            previewContainer.classList.remove('show');
             hideResult();
             hideError();
         }

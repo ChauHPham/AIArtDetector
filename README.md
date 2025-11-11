@@ -136,9 +136,22 @@ print("Path to dataset files:", path)
 - No API setup needed
 - Can preview dataset before downloading
 
+## 🌐 Deploy to Production
+
+Want to make this a live website? See the deployment guides:
+
+- **Quick Start**: See `DEPLOY_QUICKSTART.md` for the fastest way to deploy
+- **Full Guide**: See `DEPLOYMENT.md` for detailed deployment options
+
+**Recommended platforms:**
+- **Render** (Free tier available) - Easiest
+- **Railway** (Free $5 credit) - Very simple
+- **Heroku** (Free tier with limitations) - Classic choice
+
 ## Notes
 - This is a baseline; for real-world robustness, consider:
   - multiple generators in the AI class
   - augmentations (jpeg, resize, blur) to avoid overfitting to trivial cues
 - GPU recommended but not required.
 - Web app works with or without a trained model (will use untrained weights if no checkpoint found)
+- **Disclaimer**: Predictions may not be accurate due to model limitations, potential overfitting, and limited training data. Use for educational purposes only.

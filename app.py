@@ -56,4 +56,6 @@ def load_detector(checkpoint_path='models/detector.pth'):
 if __name__ == '__main__':
     # Load detector on startup
     load_detector()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Get port from environment variable (for deployment) or use default
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
