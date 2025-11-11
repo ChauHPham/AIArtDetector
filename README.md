@@ -1,6 +1,10 @@
 # AI Art Detector (PyTorch + Web App)
 
-Detect whether an image is **AI-generated** or **Human-made** using a transfer-learning baseline.
+Detect whether an image is **AI-generated** or **Human-made** using a transfer-learning baseline. The model has up to 95%+ accuracy.
+<img width="1160" height="1930" alt="ai" src="https://github.com/user-attachments/assets/0ac5bdc3-e627-463c-bf11-23f91c6cd319" />
+<img width="1186" height="1930" alt="human" src="https://github.com/user-attachments/assets/5150af5b-7eb4-4e29-ae35-c0a4765abf29" />
+<img width="1256" height="944" alt="confusion" src="https://github.com/user-attachments/assets/44a56654-7580-4350-ae9e-d33bdbb18812" />
+
 
 ## Features
 - PyTorch + torchvision baseline (ResNet-50)
